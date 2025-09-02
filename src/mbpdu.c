@@ -110,17 +110,28 @@ extern size_t mbpdu_handle_req(
 	uint8_t *res)
 {
 	int was_listen_only;
+	uint8_t send_event;
 	enum mbstatus_e status;
 	struct mbpdu_buf_s res_pdu;
 
 	if (!inst || !req || !res || req_len<1) return 0;
 
+	send_event = MB_COMM_EVENT_IS_SEND;
+
 	/* If we are in listen mode we don't handle any requests,
 	   other than reset communication. */
 	if (inst->state.is_listen_only
-			&& (req[0]!=MBFC_DIAGNOSTICS || betou16(req+1)!=MBFC_DIGS_RESTART_COMMS_OPT)) {
+			&& (req_len<3
+				|| req[0]!=MBFC_DIAGNOSTICS
+				|| betou16(req+1)!=MBFC_DIGS_RESTART_COMMS_OPT)) {
+		send_event |= MB_COMM_EVENT_SEND_LISTEN_ONLY;
+		mb_add_comm_event(inst, send_event);
 		return 0;
 	}
+
+	/* Increment count of messages addressed to this device.
+	   Should not get incremented when in listen only mode. */
+	++inst->state.msg_counter;
 
 	was_listen_only = inst->state.is_listen_only;
 
@@ -138,23 +149,25 @@ extern size_t mbpdu_handle_req(
 		res[1] = status;
 		res_pdu.size = 2;
 
-		mb_add_comm_event( /* Create communication log entry */
-			inst,
-			MB_COMM_EVENT_IS_SEND
-			| (status==MB_ILLEGAL_FN
-					|| status==MB_ILLEGAL_DATA_ADDR
-					|| status==MB_ILLEGAL_DATA_VAL
-				? MB_COMM_EVENT_SEND_READ_EX
-				: 0)
-			| (status==MB_DEV_FAIL ? MB_COMM_EVENT_SEND_ABORT_EX : 0)
-			| (status==MB_ACK || status==MB_BUSY ? MB_COMM_EVENT_SEND_BUSY_EX : 0)
-			| (status==MB_NEG_ACK ? MB_COMM_EVENT_SEND_NAK_EX : 0)
-			| (inst->state.is_listen_only ? MB_COMM_EVENT_SEND_LISTEN_ONLY : 0));
+		/* Set send communication event flags */
+		if (status==MB_ILLEGAL_FN
+				|| status==MB_ILLEGAL_DATA_ADDR
+				|| status==MB_ILLEGAL_DATA_VAL) {
+			send_event |= MB_COMM_EVENT_SEND_READ_EX;
+		}
+		if (status==MB_DEV_FAIL) send_event |= MB_COMM_EVENT_SEND_ABORT_EX;
+		if (status==MB_ACK || status==MB_BUSY) send_event |= MB_COMM_EVENT_SEND_BUSY_EX;
+		if (status==MB_NEG_ACK) send_event |= MB_COMM_EVENT_SEND_NAK_EX;
 	}
 
+	/* Listen only mode changes "takes effect" after the response is sent,
+	   therefore we report the state as before handling the request. */
+	if (was_listen_only) send_event |= MB_COMM_EVENT_SEND_LISTEN_ONLY;
+	mb_add_comm_event(inst, send_event);
+
 	/* Increment diagnostic counters */
-	++inst->state.msg_counter;
 	if (status==MB_OK
+			&& req[0]!=MBFC_DIAGNOSTICS
 			&& req[0]!=MBFC_COMM_EVENT_COUNTER
 			&& req[0]!=MBFC_COMM_EVENT_LOG) {
 		++inst->state.comm_event_counter;
@@ -165,7 +178,7 @@ extern size_t mbpdu_handle_req(
 
 	/* If the device is in listen only more, or was prior to this request;
 	   we don't want to send a response. */
-	return inst->state.is_listen_only || was_listen_only
+	return (inst->state.is_listen_only || was_listen_only)
 		? 0
 		: res_pdu.size;
 }

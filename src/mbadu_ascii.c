@@ -96,7 +96,7 @@ extern size_t mbadu_ascii_handle_req(
 {
 	size_t i, req_bin_len, res_pdu_len;
 	uint8_t recv_slave_addr, recv_lrc;
-	int lrc_err;
+	uint8_t recv_event;
 
 	/* Use response buffer to store temporary binary request */
 	uint8_t *req_bin = res;
@@ -107,16 +107,24 @@ extern size_t mbadu_ascii_handle_req(
 
 	++inst->state.bus_msg_counter;
 
-	/* Ensure correct start and end chars */
-	if (req[0] != MBADU_ASCII_START_CHAR) return 0;
-	if (req[req_len-2]!='\r' || req[req_len-1]!=inst->state.ascii_delimiter) return 0;
+	recv_event = 0;
+	if (inst->state.is_listen_only) recv_event |= MB_COMM_EVENT_RECV_LISTEN_MODE;
 
-	/* Ensure length of request without start char is divisible by two */
-	if ((req_len-1)%2 != 0) return 0;
+	/* Ensure correct start and end chars, and length without start char is divisible by two (ascii hex) */
+	if (req[0]!=MBADU_ASCII_START_CHAR
+			|| req[req_len-2]!='\r'
+			|| req[req_len-1]!=inst->state.ascii_delimiter
+			|| (req_len-1)%2 != 0) {
+		if (recv_event) mb_add_comm_event(inst, MB_COMM_EVENT_IS_RECV | recv_event);
+		return 0;
+	}
 
 	/* Ensure entire request (excluding start and end chars) are hex */
 	for (i=1; i<req_len-2; ++i) {
-		if (!isxdigit(req[i])) return 0;
+		if (!isxdigit(req[i])) {
+			if (recv_event) mb_add_comm_event(inst, MB_COMM_EVENT_IS_RECV | recv_event);
+			return 0;
+		}
 	}
 
 	/* Convert ascii request to binary */
@@ -125,38 +133,33 @@ extern size_t mbadu_ascii_handle_req(
 		req_bin[req_bin_len++] = (uint8_t)(xtoi(req[i])*16 + xtoi(req[i+1]));
 	}
 
+	/* Check LRC before slave address to monitor the overall health of the
+	   bus, not just this device */
+	recv_lrc = req_bin[req_bin_len-1];
+	if (recv_lrc != calc_lrc(req_bin, req_bin_len-1)) {
+		++inst->state.bus_comm_err_counter;
+		recv_event |= MB_COMM_EVENT_RECV_COMM_ERR;
+		mb_add_comm_event(inst, MB_COMM_EVENT_IS_RECV | recv_event);
+		return 0;
+	}
+
+	/* Check if this request is addressed to this device */
 	recv_slave_addr = req_bin[0];
 	if (recv_slave_addr != inst->serial.slave_addr
 			&& recv_slave_addr != MBADU_ADDR_BROADCAST
 			&& (!inst->serial.enable_def_resp || recv_slave_addr != MBADU_ADDR_DEFAULT_RESP)) {
+		if (recv_event) mb_add_comm_event(inst, MB_COMM_EVENT_IS_RECV | recv_event);
 		return 0;
 	}
 
-	recv_lrc = req_bin[req_bin_len-1];
-	lrc_err = recv_lrc != calc_lrc(req_bin, req_bin_len-1);
-
-	/* Create receive communication log entry */
-	if (lrc_err
-			|| recv_slave_addr==MBADU_ADDR_BROADCAST
-			|| inst->state.is_listen_only) {
-		mb_add_comm_event(
-			inst,
-			MB_COMM_EVENT_IS_RECV
-			| (lrc_err ? MB_COMM_EVENT_RECV_COMM_ERR : 0)
-			| (inst->state.is_listen_only ? MB_COMM_EVENT_RECV_LISTEN_MODE : 0)
-			| (recv_slave_addr==MBADU_ADDR_BROADCAST ? MB_COMM_EVENT_RECV_BROADCAST : 0));
-	}
-
-	if (lrc_err) {
-		++inst->state.bus_comm_err_counter;
-		return 0;
-	}
+	if (recv_slave_addr==MBADU_ADDR_BROADCAST) recv_event |= MB_COMM_EVENT_RECV_BROADCAST;
+	if (recv_event) mb_add_comm_event(inst, MB_COMM_EVENT_IS_RECV | recv_event);
 
 	res_bin[0] = req_bin[0];
 	res_pdu_len = mbpdu_handle_req(
 		inst,
 		req_bin+1, /* Skip slave address */
-		req_bin_len-2, /* Do not include lrc */
+		req_bin_len-2, /* - Slave address and lrc */
 		res_bin+1);
 
 	/* Requests sent to the broadcast address shall never get a response */

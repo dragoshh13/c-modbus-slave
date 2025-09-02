@@ -62,11 +62,11 @@ TEST(mbdiag_restart_comms_works)
 	ASSERT_EQ(0x00, res[3]); /* Data H */
 	ASSERT_EQ(0x00, res[4]); /* Data L */
 
-	ASSERT_EQ(1u, inst.state.comm_event_counter); /* I'm not 100% sure this is correct */
+	ASSERT_EQ(0u, inst.state.comm_event_counter);
 	ASSERT_EQ(0u, inst.state.bus_msg_counter);
 	ASSERT_EQ(0u, inst.state.bus_comm_err_counter);
 	ASSERT_EQ(0u, inst.state.exception_counter);
-	ASSERT_EQ(1u, inst.state.msg_counter); /* I'm not 100% sure this is correct */
+	ASSERT_EQ(0u, inst.state.msg_counter);
 	ASSERT_EQ(0u, inst.state.no_resp_counter);
 	ASSERT_EQ(0u, inst.state.nak_counter);
 	ASSERT_EQ(0u, inst.state.busy_counter);
@@ -102,11 +102,11 @@ TEST(mbdiag_restart_comms_in_listen_only_works)
 
 	ASSERT_EQ(0u, res_size);
 
-	ASSERT_EQ(1u, inst.state.comm_event_counter); /* I'm not 100% sure this is correct */
+	ASSERT_EQ(0u, inst.state.comm_event_counter);
 	ASSERT_EQ(0u, inst.state.bus_msg_counter);
 	ASSERT_EQ(0u, inst.state.bus_comm_err_counter);
 	ASSERT_EQ(0u, inst.state.exception_counter);
-	ASSERT_EQ(1u, inst.state.msg_counter); /* I'm not 100% sure this is correct */
+	ASSERT_EQ(0u, inst.state.msg_counter);
 	ASSERT_EQ(0u, inst.state.no_resp_counter);
 	ASSERT_EQ(0u, inst.state.nak_counter);
 	ASSERT_EQ(0u, inst.state.busy_counter);
@@ -143,9 +143,9 @@ TEST(mbdiag_restart_comms_with_callback)
 	ASSERT_EQ(0xFF, res[3]); /* Echo data H */
 	ASSERT_EQ(0x00, res[4]); /* Echo data L */
 
-	ASSERT_EQ(1, s_restart_called); /* Callback should be invoked */
-	ASSERT_EQ(0, inst.state.event_log_write_pos);
-	ASSERT_EQ(0, inst.state.event_log_count);
+	ASSERT_EQ(1, s_restart_called); /* Callback should have be invoked */
+	ASSERT_EQ(1, inst.state.event_log_write_pos);
+	ASSERT_EQ(1, inst.state.event_log_count);
 }
 
 TEST(mbdiag_restart_comms_invalid_data_fails)
@@ -471,7 +471,7 @@ TEST(mbdiag_return_server_message_count_works)
 	ASSERT_EQ(5u, res_size);
 	ASSERT(!(res[0] & MB_ERR_FLG));
 	ASSERT_EQ(0xDE, res[3]); /* Counter H */
-	ASSERT_EQ(0xF0, res[4]); /* Counter L */
+	ASSERT_EQ(0xF0+1, res[4]); /* Counter L */
 }
 
 TEST(mbdiag_return_server_no_response_count_works)
