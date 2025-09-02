@@ -4,7 +4,7 @@ Lightweight [Modbus](https://en.wikipedia.org/wiki/Modbus) slave implementation 
 
 ## Features
 
-- **Zero allocations** - Static memory only, no dynamic allocations
+- **Zero dynamic allocations** - Can be used without any dynamic allocations
 - **Transport agnostic** - Works with RS485/RS232 serial and Ethernet
 - **Flexible data access** - Direct pointers, callbacks, or constant values
 - **Compact footprint** - Minimal RAM and flash usage for embedded systems
