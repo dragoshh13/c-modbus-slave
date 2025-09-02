@@ -57,9 +57,9 @@ extern size_t mbadu_handle_req(
 	size_t req_len,
 	uint8_t *res)
 {
+	uint8_t recv_event;
 	uint8_t recv_slave_addr;
 	uint16_t recv_crc;
-	int crc_err;
 	size_t pdu_size;
 
 	if (!inst || !req || !res) return 0;
@@ -67,39 +67,36 @@ extern size_t mbadu_handle_req(
 
 	++inst->state.bus_msg_counter;
 
+	recv_event = 0;
+	if (inst->state.is_listen_only) recv_event |= MB_COMM_EVENT_RECV_LISTEN_MODE;
+
+	/* Check CRC before slave address to monitor the overall health of the
+	   bus, not just this device */
+	recv_crc = letou16(req + req_len - 2); /* CRC is in the last two bytes, little endian */
+	if (recv_crc != mbcrc16(req, req_len - 2)) {
+		++inst->state.bus_comm_err_counter;
+		recv_event |= MB_COMM_EVENT_RECV_COMM_ERR;
+		mb_add_comm_event(inst, MB_COMM_EVENT_IS_RECV | recv_event);
+		return 0;
+	}
+
+	/* Check if this request is addressed to this device */
 	recv_slave_addr = req[0];
 	if (recv_slave_addr != inst->serial.slave_addr
 			&& recv_slave_addr != MBADU_ADDR_BROADCAST
 			&& (!inst->serial.enable_def_resp || recv_slave_addr != MBADU_ADDR_DEFAULT_RESP)) {
+		if (recv_event) mb_add_comm_event(inst, MB_COMM_EVENT_IS_RECV | recv_event);
 		return 0;
 	}
 
-	/* CRC is in the last two bytes, little endian */
-	recv_crc = letou16(req + req_len - 2);
-	crc_err = recv_crc != mbcrc16(req, req_len - 2);
-
-	/* Create receive communication log entry */
-	if (crc_err
-			|| recv_slave_addr==MBADU_ADDR_BROADCAST
-			|| inst->state.is_listen_only) {
-		mb_add_comm_event(
-			inst,
-			MB_COMM_EVENT_IS_RECV
-			| (crc_err ? MB_COMM_EVENT_RECV_COMM_ERR : 0)
-			| (inst->state.is_listen_only ? MB_COMM_EVENT_RECV_LISTEN_MODE : 0)
-			| (recv_slave_addr==MBADU_ADDR_BROADCAST ? MB_COMM_EVENT_RECV_BROADCAST : 0));
-	}
-
-	if (crc_err) {
-		++inst->state.bus_comm_err_counter;
-		return 0;
-	}
+	if (recv_slave_addr==MBADU_ADDR_BROADCAST) recv_event |= MB_COMM_EVENT_RECV_BROADCAST;
+	if (recv_event) mb_add_comm_event(inst, MB_COMM_EVENT_IS_RECV | recv_event);
 
 	pdu_size = mbpdu_handle_req(
 		inst,
-		req + 1, /* PDU starts after slave address */
-		req_len - 3, /* - Slave addres and crc */
-		res + 1);
+		req+1, /* Skip slave address */
+		req_len-3, /* - Slave address and crc */
+		res+1);
 
 	/* Requests sent to the broadcast address shall never get a response */
 	if (pdu_size==0u || recv_slave_addr==MBADU_ADDR_BROADCAST) {

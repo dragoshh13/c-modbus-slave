@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Don't increment comm event counter for diagnostic requests (Function code 0x08)
+- Check CRC before slave address in ADU handling to monitor the overall health of the bus, not just this device
 
 ## [1.0.0] - 2025-08-06
 
