@@ -155,6 +155,7 @@ extern size_t mbpdu_handle_req(
 	/* Increment diagnostic counters */
 	++inst->state.msg_counter;
 	if (status==MB_OK
+			&& req[0]!=MBFC_DIAGNOSTICS
 			&& req[0]!=MBFC_COMM_EVENT_COUNTER
 			&& req[0]!=MBFC_COMM_EVENT_LOG) {
 		++inst->state.comm_event_counter;
