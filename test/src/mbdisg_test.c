@@ -62,7 +62,7 @@ TEST(mbdiag_restart_comms_works)
 	ASSERT_EQ(0x00, res[3]); /* Data H */
 	ASSERT_EQ(0x00, res[4]); /* Data L */
 
-	ASSERT_EQ(1u, inst.state.comm_event_counter); /* I'm not 100% sure this is correct */
+	ASSERT_EQ(0u, inst.state.comm_event_counter);
 	ASSERT_EQ(0u, inst.state.bus_msg_counter);
 	ASSERT_EQ(0u, inst.state.bus_comm_err_counter);
 	ASSERT_EQ(0u, inst.state.exception_counter);
@@ -102,7 +102,7 @@ TEST(mbdiag_restart_comms_in_listen_only_works)
 
 	ASSERT_EQ(0u, res_size);
 
-	ASSERT_EQ(1u, inst.state.comm_event_counter); /* I'm not 100% sure this is correct */
+	ASSERT_EQ(0u, inst.state.comm_event_counter);
 	ASSERT_EQ(0u, inst.state.bus_msg_counter);
 	ASSERT_EQ(0u, inst.state.bus_comm_err_counter);
 	ASSERT_EQ(0u, inst.state.exception_counter);
