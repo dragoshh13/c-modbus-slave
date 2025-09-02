@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Increment server message count before handling requests to act correct on communication reset
 - Create send communication event for all processed requests
 
-## [1.0.0] - 2025-08-06
+## [1.0.0] - 2025-09-02
 
 ### Added
 
