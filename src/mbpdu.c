@@ -122,6 +122,10 @@ extern size_t mbpdu_handle_req(
 		return 0;
 	}
 
+	/* Increment count of messages addressed to this device.
+	   Should not get incremented when in listen only mode. */
+	++inst->state.msg_counter;
+
 	was_listen_only = inst->state.is_listen_only;
 
 	/* Copy function code from request to response */
@@ -153,7 +157,6 @@ extern size_t mbpdu_handle_req(
 	}
 
 	/* Increment diagnostic counters */
-	++inst->state.msg_counter;
 	if (status==MB_OK
 			&& req[0]!=MBFC_DIAGNOSTICS
 			&& req[0]!=MBFC_COMM_EVENT_COUNTER
