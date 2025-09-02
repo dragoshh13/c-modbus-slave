@@ -1,0 +1,21 @@
+name: "Test Unit"
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  test-unit:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        compiler: [gcc, clang]
+
+    steps:
+    - uses: actions/checkout@v5
+
+    - name: Run unit tests
+      run: make CC=${{ matrix.compiler }} LD=${{ matrix.compiler }} test -s
