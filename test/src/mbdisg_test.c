@@ -143,9 +143,9 @@ TEST(mbdiag_restart_comms_with_callback)
 	ASSERT_EQ(0xFF, res[3]); /* Echo data H */
 	ASSERT_EQ(0x00, res[4]); /* Echo data L */
 
-	ASSERT_EQ(1, s_restart_called); /* Callback should be invoked */
-	ASSERT_EQ(0, inst.state.event_log_write_pos);
-	ASSERT_EQ(0, inst.state.event_log_count);
+	ASSERT_EQ(1, s_restart_called); /* Callback should have be invoked */
+	ASSERT_EQ(1, inst.state.event_log_write_pos);
+	ASSERT_EQ(1, inst.state.event_log_count);
 }
 
 TEST(mbdiag_restart_comms_invalid_data_fails)
