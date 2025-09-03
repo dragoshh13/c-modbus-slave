@@ -1,5 +1,5 @@
 #include "test_lib.h"
-#include <utils/endian.h>
+#include <endian.h>
 
 TEST(endian_betou16_works)
 {

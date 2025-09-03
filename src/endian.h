@@ -28,8 +28,8 @@
  * Authorized representative: Edgar Vorland, SE TI EAD MF&P SUS OMS, Group Manager Electronics
  */
 
-#ifndef UTILS__ENDIAN_H_INCLUDED
-#define UTILS__ENDIAN_H_INCLUDED
+#ifndef ENDIAN_H_INCLUDED
+#define ENDIAN_H_INCLUDED
 
 #include <stdint.h>
 
@@ -369,4 +369,4 @@ extern void f32tole(float val, uint8_t *dst);
  */
 extern void f64tole(double val, uint8_t *dst);
 
-#endif /* UTILS__ENDIAN_H_INCLUDED */
+#endif /* ENDIAN_H_INCLUDED */

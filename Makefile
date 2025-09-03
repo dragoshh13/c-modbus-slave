@@ -4,6 +4,7 @@ CLANG = clang
 BUILD_DIR := build
 
 SRC := \
+	src/endian.c \
 	src/mbadu_ascii.c \
 	src/mbadu_tcp.c \
 	src/mbadu.c \
@@ -17,8 +18,7 @@ SRC := \
 	src/mbpdu.c \
 	src/mbreg.c \
 	src/mbsupp.c \
-	src/mbtest.c \
-	src/utils/endian.c
+	src/mbtest.c
 
 OBJECTS := ${addprefix ${BUILD_DIR}/, ${SRC:.c=.o}}
 DEPENDENCY_OBJECTS := ${OBJECTS:.o=.d}

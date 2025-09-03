@@ -1,8 +1,8 @@
 #include "test_lib.h"
+#include <endian.h>
 #include <mbinst.h>
 #include <mbadu_tcp.h>
 #include <mbpdu.h>
-#include <utils/endian.h>
 
 TEST(mbadu_tcp_null_inst_fails)
 {

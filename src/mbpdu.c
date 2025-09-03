@@ -29,12 +29,12 @@
  */
 
 #include "mbpdu.h"
+#include "endian.h"
 #include "mbdef.h"
 #include "mbfn_coils.h"
 #include "mbfn_digs.h"
 #include "mbfn_regs.h"
 #include "mbfn_serial.h"
-#include "utils/endian.h"
 #include <stddef.h>
 #include <stdint.h>
 
