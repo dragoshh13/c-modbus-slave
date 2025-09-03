@@ -5,6 +5,7 @@ TEST_SRC_DIR := src
 BUILD_DIR := build
 
 APP_SRC := \
+	endian.c \
 	mbadu_ascii.c \
 	mbadu_tcp.c \
 	mbadu.c \
@@ -18,8 +19,7 @@ APP_SRC := \
 	mbpdu.c \
 	mbreg.c \
 	mbsupp.c \
-	mbtest.c \
-	utils/endian.c
+	mbtest.c
 
 TEST_SRC := ${sort ${wildcard ${TEST_SRC_DIR}/*.c}}
 TESTS := ${patsubst ${TEST_SRC_DIR}/%.c,${BUILD_DIR}/${TEST_SRC_DIR}/%,${TEST_SRC}}

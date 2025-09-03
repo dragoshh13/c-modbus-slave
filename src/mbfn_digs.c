@@ -29,7 +29,7 @@
  */
 
 #include "mbfn_digs.h"
-#include "utils/endian.h"
+#include "endian.h"
 #include <string.h>
 
 static void reset_comm_counters(struct mbinst_s *inst)

@@ -29,7 +29,7 @@
  */
 
 #include "mbadu_tcp.h"
-#include "utils/endian.h"
+#include "endian.h"
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>

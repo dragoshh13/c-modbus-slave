@@ -29,9 +29,9 @@
  */
 
 #include "mbadu.h"
+#include "endian.h"
 #include "mbpdu.h"
 #include "mbcrc.h"
-#include "utils/endian.h"
 
 /**
  * @brief Add Slave addres and CRC to response ADU

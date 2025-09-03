@@ -1,7 +1,7 @@
 #include "test_lib.h"
+#include <endian.h>
 #include <mbinst.h>
 #include <mbpdu.h>
-#include <utils/endian.h>
 
 TEST(mbpdu_read_holding_reg_works)
 {

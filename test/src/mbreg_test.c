@@ -1,7 +1,7 @@
 #include "test_lib.h"
+#include <endian.h>
 #include <mbreg.h>
 #include <mbinst.h>
-#include <utils/endian.h>
 
 /* Test register size calculations for different data types */
 

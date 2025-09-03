@@ -1,8 +1,8 @@
 #include "test_lib.h"
+#include <endian.h>
 #include <mbinst.h>
 #include <mbadu.h>
 #include <mbcrc.h>
-#include <utils/endian.h>
 
 TEST(mbadu_null_inst_fails)
 {

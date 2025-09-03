@@ -29,8 +29,8 @@
  */
 
 #include "mbfn_regs.h"
+#include "endian.h"
 #include "mbreg.h"
-#include "utils/endian.h"
 #include <stddef.h>
 #include <stdint.h>
 
