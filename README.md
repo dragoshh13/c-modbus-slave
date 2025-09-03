@@ -45,11 +45,13 @@ static struct mbinst_s s_inst = {
 mbinst_init(&inst);
 
 /* 5. Handle incoming requests */
+uint8_t req[MBADU_SIZE_MAX];
+size_t req_len = fetch_request(req); /* Fetch data from your transport layer (see examples/**) */
+
 uint8_t resp[MBADU_SIZE_MAX];
-size_t resp_len = mbadu_handle_req(&s_inst, req_data, req_len, resp);
+size_t resp_len = mbadu_handle_req(&s_inst, req, req_len, resp);
 if (resp_len) {
-    /* Send response via your transport layer */
-    send_response(resp, resp_len);
+    send_response(resp, resp_len); /* Send response via your transport layer (see examples/**) */
 }
 ```
 
