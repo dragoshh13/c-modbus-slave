@@ -9,7 +9,7 @@ Files marked **X** must always be compiled, regardless of transport protocol.
 |       | File          | Note                |
 | ----- | ------------- | ------------------- |
 | **X** | endian.c      |                     |
-|       | mbadu.c       | _Serial only_       |
+|       | mbadu.c       | _Serial RTU only_   |
 |       | mbadu_ascii.c | _Serial ASCII only_ |
 |       | mbadu_tcp.c   | _TCP/IP only_       |
 | **X** | mbcoil.c      |                     |
