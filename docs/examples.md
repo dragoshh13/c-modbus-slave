@@ -1,5 +1,3 @@
-[[_TOC_]]
-
 # Examples
 
 Comprehensive usage examples for different scenarios and configurations.

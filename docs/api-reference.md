@@ -60,7 +60,7 @@ For additional information, see [Modbus Application Protocol](https://www.modbus
 | **X** | 0x07  | **MBFC_READ_EXCEPTION_STATUS** | Read exception status            | _Serial only_ |
 | **X** | 0x08  | **MBFC_DIAGNOSTICS**           | Diagnostics                      | _Serial only_ |
 | **X** | 0x0B  | **MBFC_COMM_EVENT_COUNTER**    | Get comm event counter           | _Serial only_ |
-|       | 0x0C  | **MBFC_COMM_EVENT_LOG**        | Get comm event log               | _Serial only_ |
+| **X** | 0x0C  | **MBFC_COMM_EVENT_LOG**        | Get comm event log               | _Serial only_ |
 | **X** | 0x0F  | **MBFC_WRITE_MULTIPLE_COILS**  | Write multiple coils             |               |
 | **X** | 0x10  | **MBFC_WRITE_MULTIPLE_REGS**   | Write multiple holding registers |               |
 |       | 0x11  | **MBFC_REPORT_SLAVE_ID**       | Report slave identification      | _Serial only_ |
